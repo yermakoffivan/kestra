@@ -440,7 +440,7 @@
         dataTable.value?.resetAndReload()
     })
 
-    const showStatChart = () => props.withCharts && showChart.value
+    const showStatChart = () => props.withCharts && showChart.value && !logsStore.isCursorMode
 
     const onShowChartChange = (value: boolean) => {
         showChart.value = value
