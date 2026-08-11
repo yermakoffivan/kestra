@@ -95,6 +95,7 @@
     "total_duration": "Gesamtdauer",
     "running duration": "Laufzeitdauer",
     "queued duration": "Warteschlangendauer",
+    "paused duration": "Pausierte Dauer",
     "executionProgress": {
       "title": "Ausführungsfortschritt",
       "estimatedRemaining": "Geschätzte Restzeit: {duration}",
