@@ -33,7 +33,10 @@ jobs:
 
   build-artifacts:
     name: Build Artifacts
-    uses: kestra-io/actions/.github/workflows/kestra-oss-build-artifacts.yml@feat/opt-in-larger-runners
+uses: kestra-io/actions/.github/workflows/kestra-oss-build-artifacts.yml@feat/opt-in-larger-runners
+    secrets:
+      OTLP_ENDPOINT: ${{ secrets.OTLP_ENDPOINT }}
+      OTLP_HEADERS: ${{ secrets.OTLP_HEADERS }}
     with:
       java-version: 25
       runner: ${{ inputs.runner || 'ubuntu-latest' }}
@@ -81,6 +84,8 @@ jobs:
       SONATYPE_GPG_KEYID: ${{ secrets.SONATYPE_GPG_KEYID }}
       SONATYPE_GPG_PASSWORD: ${{ secrets.SONATYPE_GPG_PASSWORD }}
       SONATYPE_GPG_FILE: ${{ secrets.SONATYPE_GPG_FILE }}
+      OTLP_ENDPOINT: ${{ secrets.OTLP_ENDPOINT }}
+      OTLP_HEADERS: ${{ secrets.OTLP_HEADERS }}
     with:
       java-version: 25
       runner: ${{ inputs.runner || 'ubuntu-latest' }}

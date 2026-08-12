@@ -36,7 +36,10 @@ jobs:
         run: "echo 'CI jobs will run on runner: ${{ inputs.runner || 'ubuntu-latest' }}'"
 
   e2e:
-    uses: kestra-io/actions/.github/workflows/kestra-oss-e2e-tests.yml@feat/opt-in-larger-runners
+uses: kestra-io/actions/.github/workflows/kestra-oss-e2e-tests.yml@feat/opt-in-larger-runners
+    secrets:
+      OTLP_ENDPOINT: ${{ secrets.OTLP_ENDPOINT }}
+      OTLP_HEADERS: ${{ secrets.OTLP_HEADERS }}
     with:
       java-version: 25
       runner: ${{ inputs.runner || 'ubuntu-latest' }}
