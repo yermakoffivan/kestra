@@ -3,6 +3,7 @@ import {mount} from "@vue/test-utils"
 import {createI18n} from "vue-i18n"
 import {createPinia} from "pinia"
 import {RouterLinkStub} from "@vue/test-utils"
+import {NAMESPACE_PARENT_ROUTE, NAMESPACE_TAB_NAMES} from "../../../../../src/utils/namespaceTabRoutes"
 
 const route = {params: {} as Record<string, string>, query: {} as Record<string, string>}
 
@@ -243,10 +244,24 @@ describe("NewFlowLanding", () => {
         const links = wrapper.findAllComponents(RouterLinkStub)
         const link = links.find(l => l.attributes("data-test") === "system-flow-card")
         expect(link).toBeDefined()
-        const to = link!.props("to") as {name: string; params: {id: string}; query: {tab: string}}
-        expect(to.name).toBe("namespaces/update")
+        const to = link!.props("to") as {name: string; params: {id: string}}
         expect(to.params.id).toBe("kestra.system")
-        expect(to.query.tab).toBe("blueprints")
+    })
+
+    test("Create a system flow opens the blueprints tab route, not the parent that redirects to overview", () => {
+        // Given
+        const wrapper = mount(NewFlowLanding, globalConfig)
+
+        // When
+        const links = wrapper.findAllComponents(RouterLinkStub)
+        const link = links.find(l => l.attributes("data-test") === "system-flow-card")
+        const to = link!.props("to") as {name: string; query?: Record<string, string>}
+
+        // Then — namespace tabs are child routes, and the parent redirect reads params.tab,
+        // so a `tab` query is silently dropped and the user lands on overview
+        expect(to.name).toBe(`${NAMESPACE_PARENT_ROUTE}/blueprints`)
+        expect(NAMESPACE_TAB_NAMES).toContain("blueprints")
+        expect(to.query).toBeUndefined()
     })
 
     test("Import YAML card is a button that emits import event", async () => {

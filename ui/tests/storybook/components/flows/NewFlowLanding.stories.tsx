@@ -5,6 +5,7 @@ import {createMemoryHistory} from "vue-router"
 import {vueRouter} from "storybook-vue3-router"
 import KestraDesignSystem from "@kestra-io/design-system"
 import NewFlowLanding from "../../../../src/components/flows/create/NewFlowLanding.vue"
+import {NAMESPACE_PARENT_ROUTE} from "../../../../src/utils/namespaceTabRoutes"
 
 const i18n = createI18n({
     legacy: false,
@@ -38,7 +39,16 @@ const pinia = createPinia()
 const STORY_ROUTES = [
     {path: "/", name: "home", component: {template: "<div />"}},
     {path: "/blueprints/:kind/:tab", name: "blueprints", component: {template: "<div />"}},
-    {path: "/namespaces/:id", name: "namespaces/update", component: {template: "<div />"}},
+    {
+        path: "/namespaces/:id",
+        name: NAMESPACE_PARENT_ROUTE,
+        component: {template: "<router-view />"},
+        children: [{
+            path: "blueprints",
+            name: `${NAMESPACE_PARENT_ROUTE}/blueprints`,
+            component: {template: "<div />"},
+        }],
+    },
 ]
 
 const meta: Meta<typeof NewFlowLanding> = {

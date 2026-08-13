@@ -107,7 +107,7 @@
                 </router-link>
 
                 <router-link
-                    :to="{name: 'namespaces/update', params: {tenant: route.params.tenant, id: systemNamespace}, query: {tab: 'blueprints'}}"
+                    :to="{name: `${NAMESPACE_PARENT_ROUTE}/blueprints`, params: {tenant: route.params.tenant, id: systemNamespace}}"
                     class="secondary-card"
                     data-test="system-flow-card"
                 >
@@ -158,6 +158,7 @@
     import {useMiscStore} from "override/stores/misc"
     import {useNamespaceOptions} from "../../../composables/useNamespaceOptions"
     import {isValidFlowId, isValidNamespace} from "../../../utils/flowIdentifiers"
+    import {NAMESPACE_PARENT_ROUTE} from "../../../utils/namespaceTabRoutes"
     import Plus from "vue-material-design-icons/Plus.vue"
     import ViewGridOutline from "vue-material-design-icons/ViewGridOutline.vue"
     import CogOutline from "vue-material-design-icons/CogOutline.vue"
