@@ -74,12 +74,13 @@
                         >
                             {{ $t("new_flow_landing.blank.open_editor") }}
                         </KsButton>
+                        <!-- Always mounted: a live region announces its content changing, not itself appearing. -->
                         <KsText
-                            v-if="missingRequiredFields"
+                            role="status"
                             class="open-editor-hint"
                             data-test="blank-flow-required-hint"
                         >
-                            {{ $t("new_flow_landing.blank.required_hint") }}
+                            {{ missingRequiredFields ? $t("new_flow_landing.blank.required_hint") : "" }}
                         </KsText>
                     </div>
                 </div>

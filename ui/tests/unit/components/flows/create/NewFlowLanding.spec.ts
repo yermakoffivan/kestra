@@ -163,22 +163,31 @@ describe("NewFlowLanding", () => {
     test("explains what the disabled Open editor button is waiting for", async () => {
         // Given
         const wrapper = mount(NewFlowLanding, globalConfig)
+        const hint = () => wrapper.find("[data-test='blank-flow-required-hint']")
 
         // Then — nothing filled in yet
-        expect(wrapper.find("[data-test='blank-flow-required-hint']").exists()).toBe(true)
+        expect(hint().text()).toBe("Enter a flow id and select a namespace to open the editor.")
 
         // When — only the id is filled
         await wrapper.find("[data-test='blank-flow-id']").setValue("my-flow")
 
         // Then — the namespace is still missing
-        expect(wrapper.find("[data-test='blank-flow-required-hint']").exists()).toBe(true)
+        expect(hint().text()).toBe("Enter a flow id and select a namespace to open the editor.")
 
         // When — the namespace is picked too
         await wrapper.find("[data-test='blank-flow-namespace']").setValue("company.team")
 
         // Then — the button is actionable, so the hint goes away
-        expect(wrapper.find("[data-test='blank-flow-required-hint']").exists()).toBe(false)
+        expect(hint().text()).toBe("")
         expect((wrapper.find("[data-test='blank-flow-open-editor']").element as HTMLButtonElement).disabled).toBe(false)
+    })
+
+    test("keeps the hint mounted as a live region so its content change is announced", () => {
+        // Given / When — a region that appears at the same time as its text is not announced
+        const wrapper = mount(NewFlowLanding, globalConfig)
+
+        // Then
+        expect(wrapper.find("[data-test='blank-flow-required-hint']").attributes("role")).toBe("status")
     })
 
     test("namespace select lets the user type a namespace that does not exist yet", () => {
