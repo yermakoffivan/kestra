@@ -6,11 +6,12 @@
       "blank": {
         "id_invalid": "只能使用字母、数字、点、破折号和下划线，并以字母或数字开头。",
         "id_label": "flow id",
-        "id_placeholder": "我的 flow",
+        "id_placeholder": "例如 我的 flow",
         "namespace_invalid": "仅可使用小写字母、数字、点、破折号和下划线，并以小写字母或数字开头。",
         "namespace_placeholder": "选择一个 namespace",
         "namespaces_error": "无法加载 namespace。请手动输入一个 namespace。",
         "open_editor": "打开编辑器",
+        "required_hint": "输入 flow id 并选择 namespace 以打开编辑器。",
         "subtitle": "从 hello-world 模板开始，然后从头构建。",
         "title": "空白 flow"
       },

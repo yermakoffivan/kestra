@@ -6,11 +6,12 @@
       "blank": {
         "id_invalid": "Usa solo lettere, cifre, punti, trattini e underscore, iniziando con una lettera o una cifra.",
         "id_label": "ID del flow",
-        "id_placeholder": "my-flow",
+        "id_placeholder": "ad es. my-flow",
         "namespace_invalid": "Utilizzare solo lettere minuscole, cifre, punti, trattini e underscore, iniziando con una lettera minuscola o una cifra.",
         "namespace_placeholder": "Seleziona un namespace",
         "namespaces_error": "Impossibile caricare i namespace. Digitare un namespace manualmente.",
         "open_editor": "Apri editor",
+        "required_hint": "Inserisci un id di flow e seleziona un namespace per aprire l'editor.",
         "subtitle": "Inizia con un esempio \"hello-world\" e costruisci da zero.",
         "title": "flow vuoto"
       },

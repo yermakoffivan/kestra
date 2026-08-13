@@ -6,11 +6,12 @@
       "blank": {
         "id_invalid": "Używaj tylko liter, cyfr, kropek, myślników i podkreśleń, zaczynając od litery lub cyfry.",
         "id_label": "Identyfikator flow",
-        "id_placeholder": "mój-flow",
+        "id_placeholder": "np. mój-flow",
         "namespace_invalid": "Używaj tylko małych liter, cyfr, kropek, myślników i podkreśleń, zaczynając od małej litery lub cyfry.",
         "namespace_placeholder": "Wybierz namespace",
         "namespaces_error": "Nie można załadować namespaces. Wpisz namespace ręcznie.",
         "open_editor": "Otwórz edytor",
+        "required_hint": "Podaj id flow i wybierz namespace, aby otworzyć edytor.",
         "subtitle": "Zacznij od szablonu hello-world i zbuduj od podstaw.",
         "title": "Pusty flow"
       },

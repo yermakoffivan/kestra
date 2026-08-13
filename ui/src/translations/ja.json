@@ -6,11 +6,12 @@
       "blank": {
         "id_invalid": "文字、数字、ドット、ダッシュ、アンダースコアのみを使用し、文字または数字で始めてください。",
         "id_label": "flow id",
-        "id_placeholder": "my-flow",
+        "id_placeholder": "例: my-flow",
         "namespace_invalid": "小文字、数字、ドット、ダッシュ、アンダースコアのみを使用し、小文字または数字で始めてください。",
         "namespace_placeholder": "namespaceを選択",
         "namespaces_error": "namespaceを読み込めませんでした。namespaceを手動で入力してください。",
         "open_editor": "エディターを開く",
+        "required_hint": "エディタを開くには、flow の id を入力し、namespace を選択してください。",
         "subtitle": "hello-worldスターターから始めて、ゼロから構築します。",
         "title": "空のflow"
       },

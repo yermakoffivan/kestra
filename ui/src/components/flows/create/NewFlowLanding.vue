@@ -31,7 +31,7 @@
                     </KsAlert>
 
                     <KsForm class="primary-card-fields" labelPosition="top" @submit.prevent>
-                        <KsFormItem :label="$t('new_flow_landing.blank.id_label')">
+                        <KsFormItem :label="$t('new_flow_landing.blank.id_label')" required>
                             <KsInput
                                 v-model="flowId"
                                 :placeholder="$t('new_flow_landing.blank.id_placeholder')"
@@ -42,7 +42,7 @@
                             </span>
                         </KsFormItem>
 
-                        <KsFormItem :label="$t('namespace')">
+                        <KsFormItem :label="$t('namespace')" required>
                             <KsSelect
                                 v-model="selectedNamespace"
                                 filterable
@@ -65,15 +65,23 @@
                         </KsFormItem>
                     </KsForm>
 
-                    <KsButton
-                        type="primary"
-                        class="open-editor-btn"
-                        :disabled="!canOpenEditor"
-                        data-test="blank-flow-open-editor"
-                        @click="openEditor"
-                    >
-                        {{ $t("new_flow_landing.blank.open_editor") }}
-                    </KsButton>
+                    <div class="open-editor-row">
+                        <KsButton
+                            type="primary"
+                            :disabled="!canOpenEditor"
+                            data-test="blank-flow-open-editor"
+                            @click="openEditor"
+                        >
+                            {{ $t("new_flow_landing.blank.open_editor") }}
+                        </KsButton>
+                        <KsText
+                            v-if="missingRequiredFields"
+                            class="open-editor-hint"
+                            data-test="blank-flow-required-hint"
+                        >
+                            {{ $t("new_flow_landing.blank.required_hint") }}
+                        </KsText>
+                    </div>
                 </div>
             </KsCard>
 
@@ -182,6 +190,8 @@
     const flowIdInvalid = computed(() => Boolean(flowId.value) && !isValidFlowId(flowId.value))
     const namespaceInvalid = computed(() => Boolean(selectedNamespace.value) && !isValidNamespace(selectedNamespace.value))
 
+    const missingRequiredFields = computed(() => !flowId.value || !selectedNamespace.value)
+
     const canOpenEditor = computed(() =>
         Boolean(flowId.value) && Boolean(selectedNamespace.value) && !flowIdInvalid.value && !namespaceInvalid.value,
     )
@@ -231,8 +241,16 @@
         gap: var(--ks-spacing-4);
     }
 
-    .open-editor-btn {
-        align-self: flex-start;
+    .open-editor-row {
+        display: flex;
+        align-items: center;
+        gap: var(--ks-spacing-3);
+        flex-wrap: wrap;
+    }
+
+    .open-editor-hint {
+        font-size: var(--ks-font-size-sm);
+        color: var(--ks-text-secondary);
     }
 
     .primary-card-header {

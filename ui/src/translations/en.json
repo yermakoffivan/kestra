@@ -6,11 +6,12 @@
       "blank": {
         "id_invalid": "Use letters, digits, dots, dashes and underscores only, starting with a letter or a digit.",
         "id_label": "Flow id",
-        "id_placeholder": "my-flow",
+        "id_placeholder": "e.g. my-flow",
         "namespace_invalid": "Use lowercase letters, digits, dots, dashes and underscores only, starting with a lowercase letter or a digit.",
         "namespace_placeholder": "Select a namespace",
         "namespaces_error": "Could not load namespaces. Type a namespace manually.",
         "open_editor": "Open editor",
+        "required_hint": "Enter a flow id and select a namespace to open the editor.",
         "subtitle": "Start with a hello-world starter and build from scratch.",
         "title": "Blank flow"
       },

@@ -6,11 +6,12 @@
       "blank": {
         "id_invalid": "Verwenden Sie nur Buchstaben, Ziffern, Punkte, Bindestriche und Unterstriche, beginnend mit einem Buchstaben oder einer Ziffer.",
         "id_label": "Flow id",
-        "id_placeholder": "mein-flow",
+        "id_placeholder": "z.B. mein-flow",
         "namespace_invalid": "Verwenden Sie nur Kleinbuchstaben, Ziffern, Punkte, Bindestriche und Unterstriche, beginnend mit einem Kleinbuchstaben oder einer Ziffer.",
         "namespace_placeholder": "Wählen Sie einen namespace aus",
         "namespaces_error": "Namespaces konnten nicht geladen werden. Geben Sie einen namespace manuell ein.",
         "open_editor": "Editor öffnen",
+        "required_hint": "Geben Sie eine flow-id ein und wählen Sie einen namespace aus, um den Editor zu öffnen.",
         "subtitle": "Beginnen Sie mit einem Hello-World-Starter und erstellen Sie von Grund auf neu.",
         "title": "Leerer flow"
       },

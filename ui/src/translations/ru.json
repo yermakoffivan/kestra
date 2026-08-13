@@ -6,11 +6,12 @@
       "blank": {
         "id_invalid": "Используйте только буквы, цифры, точки, тире и нижние подчеркивания, начиная с буквы или цифры.",
         "id_label": "ID flow",
-        "id_placeholder": "my-flow",
+        "id_placeholder": "например, my-flow",
         "namespace_invalid": "Используйте только строчные буквы, цифры, точки, тире и подчеркивания, начиная со строчной буквы или цифры.",
         "namespace_placeholder": "Выберите namespace",
         "namespaces_error": "Не удалось загрузить namespaces. Введите namespace вручную.",
         "open_editor": "Открыть редактор",
+        "required_hint": "Введите id flow и выберите namespace, чтобы открыть редактор.",
         "subtitle": "Начните с шаблона hello-world и создайте с нуля.",
         "title": "Пустой flow"
       },

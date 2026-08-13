@@ -27,9 +27,10 @@ const messages = {
         "new_flow_landing.blank.title": "Blank flow",
         "new_flow_landing.blank.subtitle": "Start with a hello-world starter and build from scratch.",
         "new_flow_landing.blank.id_label": "Flow id",
-        "new_flow_landing.blank.id_placeholder": "my-flow",
+        "new_flow_landing.blank.id_placeholder": "e.g. my-flow",
         "new_flow_landing.blank.namespace_placeholder": "Select a namespace",
         "new_flow_landing.blank.open_editor": "Open editor",
+        "new_flow_landing.blank.required_hint": "Enter a flow id and select a namespace to open the editor.",
         "new_flow_landing.blank.namespaces_error": "Could not load namespaces.",
         "new_flow_landing.blank.id_invalid": "Invalid flow id.",
         "new_flow_landing.blank.namespace_invalid": "Invalid namespace.",
@@ -58,7 +59,10 @@ const globalConfig = {
             KsCard: {template: "<div><slot /></div>"},
             KsAlert: {template: "<div data-stub='ks-alert'><slot /></div>"},
             KsForm: {template: "<form><slot /></form>"},
-            KsFormItem: {template: "<div><slot /></div>"},
+            KsFormItem: {
+                template: "<div><label>{{ label }}<span v-if=\"required\" class='required-mark'>*</span></label><slot /></div>",
+                props: {label: String, required: Boolean},
+            },
             KsInput: {
                 template: "<input :value='modelValue' @input=\"$emit('update:modelValue', $event.target.value)\" />",
                 props: ["modelValue"],
@@ -146,6 +150,35 @@ describe("NewFlowLanding", () => {
         // Then — no id or namespace filled
         const btn = wrapper.find("[data-test='blank-flow-open-editor']")
         expect((btn.element as HTMLButtonElement).disabled).toBe(true)
+    })
+
+    test("marks the flow id and namespace fields as required", () => {
+        // Given / When — a disabled button with unmarked fields reads as broken rather than blocked
+        const wrapper = mount(NewFlowLanding, globalConfig)
+
+        // Then — both fields carry the required marker
+        expect(wrapper.findAll(".required-mark")).toHaveLength(2)
+    })
+
+    test("explains what the disabled Open editor button is waiting for", async () => {
+        // Given
+        const wrapper = mount(NewFlowLanding, globalConfig)
+
+        // Then — nothing filled in yet
+        expect(wrapper.find("[data-test='blank-flow-required-hint']").exists()).toBe(true)
+
+        // When — only the id is filled
+        await wrapper.find("[data-test='blank-flow-id']").setValue("my-flow")
+
+        // Then — the namespace is still missing
+        expect(wrapper.find("[data-test='blank-flow-required-hint']").exists()).toBe(true)
+
+        // When — the namespace is picked too
+        await wrapper.find("[data-test='blank-flow-namespace']").setValue("company.team")
+
+        // Then — the button is actionable, so the hint goes away
+        expect(wrapper.find("[data-test='blank-flow-required-hint']").exists()).toBe(false)
+        expect((wrapper.find("[data-test='blank-flow-open-editor']").element as HTMLButtonElement).disabled).toBe(false)
     })
 
     test("namespace select lets the user type a namespace that does not exist yet", () => {

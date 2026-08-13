@@ -6,11 +6,12 @@
       "blank": {
         "id_invalid": "केवल अक्षर, अंक, बिंदु, डैश और अंडरस्कोर का उपयोग करें, जो अक्षर या अंक से शुरू होते हों।",
         "id_label": "flow id",
-        "id_placeholder": "मेरा-flow",
+        "id_placeholder": "उदा. मेरा-flow",
         "namespace_invalid": "केवल छोटे अक्षरों, अंकों, बिंदुओं, डैश और अंडरस्कोर का उपयोग करें, जिनकी शुरुआत छोटे अक्षर या अंक से हो।",
         "namespace_placeholder": "एक namespace चुनें",
         "namespaces_error": "namespace लोड नहीं किए जा सके। मैन्युअल रूप से एक namespace टाइप करें।",
         "open_editor": "एडिटर खोलें",
+        "required_hint": "एडिटर खोलने के लिए एक flow id दर्ज करें और एक namespace चुनें।",
         "subtitle": "हैलो-वर्ल्ड स्टार्टर से शुरू करें और स्क्रैच से बनाएं।",
         "title": "खाली flow"
       },
