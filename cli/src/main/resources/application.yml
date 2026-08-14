@@ -64,8 +64,11 @@ micronaut:
       filter:
         enabled: false
   caches:
+    # Entries are weighed by their serialized JSON size in bytes (io.kestra.webserver.cache.JsonBytesCacheWeigher),
+    # so maximum-weight is a real byte bound (64MiB), not an entry count. Sized to hold the plugin documentation
+    # and plugin icons index of a full plugin set.
     default:
-      maximum-weight: 10485760
+      maximum-weight: 67108864
   http:
     client:
       read-idle-timeout: 60s
