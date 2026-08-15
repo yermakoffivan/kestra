@@ -2466,6 +2466,10 @@
       "install_description": "Installieren Sie Kestra als App für einen schnelleren Zugriff und ein Vollbild-Erlebnis.",
       "install": "Installieren",
       "dismiss": "Nicht jetzt"
+    },
+    "plugin_card": {
+      "tasks": "Aufgabe | Aufgaben",
+      "blueprints": "Vorlage | Vorlagen"
     }
   }
 }

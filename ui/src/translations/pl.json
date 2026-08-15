@@ -2466,6 +2466,10 @@
       "install_description": "Zainstaluj Kestra jako aplikację, aby uzyskać szybszy dostęp i pełnoekranowe wrażenia.",
       "install": "Zainstaluj",
       "dismiss": "Nie teraz"
+    },
+    "plugin_card": {
+      "tasks": "zadanie | zadania",
+      "blueprints": "szablon | szablony"
     }
   }
 }
