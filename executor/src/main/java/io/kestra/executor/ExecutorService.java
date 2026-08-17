@@ -340,6 +340,64 @@ public class ExecutorService {
         return Optional.empty();
     }
 
+    /**
+     * Called right after a flowable's {@code resolveState()} first resolves to {@code FAILED} while
+     * it implements {@link OnChildFailureInterface} with a non-{@code CONTINUE} value: interrupts
+     * every still-running task run in its subtree so they don't keep executing on an already-failed
+     * branch. Fires as a side effect alongside the flowable's own FAILED transition — it neither
+     * delays it nor touches the execution's own state.
+     */
+    private void interruptOnChildFailure(ExecutorContext executor, OnChildFailureInterface onChildFailure, TaskRun parentTaskRun, RunContext runContext) throws InternalException {
+        OnChildFailureInterface.OnChildFailure config = runContext.render(onChildFailure.getOnChildFailure())
+            .as(OnChildFailureInterface.OnChildFailure.class)
+            .orElse(OnChildFailureInterface.OnChildFailure.CONTINUE);
+        if (config == OnChildFailureInterface.OnChildFailure.CONTINUE || config == OnChildFailureInterface.OnChildFailure.UNKNOWN) {
+            return;
+        }
+
+        List<TaskRun> nonTerminated = onChildFailure.nonTerminatedChildrenTaskRuns(executor.getExecution(), parentTaskRun);
+        if (nonTerminated.isEmpty()) {
+            return;
+        }
+
+        State.Type targetState = config.toTaskRunState();
+        List<String> leafTaskRunIds = new ArrayList<>();
+        List<WorkerTaskResult> resolvedFlowables = new ArrayList<>();
+
+        for (TaskRun descendant : nonTerminated) {
+            Task descendantTask = executor.getFlow().findTaskByTaskIdOrNull(descendant.getTaskId());
+            if (descendantTask instanceof FlowableTask<?>) {
+                // a flowable descendant has no worker job of its own to interrupt — resolve it
+                // directly to the configured state instead of waiting on it. Its own descendants
+                // (leaf or flowable, at any depth) are covered independently in this same loop, since
+                // nonTerminatedChildrenTaskRuns() is already fully recursive.
+                resolvedFlowables.add(new WorkerTaskResult(descendant.withStateAndAttempt(targetState)));
+            } else {
+                leafTaskRunIds.add(descendant.getId());
+            }
+        }
+
+        if (!resolvedFlowables.isEmpty()) {
+            this.addWorkerTaskResults(executor, resolvedFlowables);
+        }
+
+        if (!leafTaskRunIds.isEmpty()) {
+            try {
+                killQueue.emit(
+                    ExecutionKilledTaskRuns.builder()
+                        .tenantId(parentTaskRun.getTenantId())
+                        .executionId(parentTaskRun.getExecutionId())
+                        .taskRunIds(leafTaskRunIds)
+                        .taskRunState(targetState)
+                        .state(ExecutionKilled.State.EXECUTED)
+                        .build()
+                );
+            } catch (QueueException e) {
+                log.error("Unable to interrupt task runs {} after child failure", leafTaskRunIds, e);
+            }
+        }
+    }
+
     private Optional<WorkerTaskResult> childWorkerTaskTypeToWorkerTask(
         Optional<State.Type> findState,
         TaskRun taskRun) {
@@ -556,7 +614,14 @@ public class ExecutorService {
             if (taskRun.getState().isRunning() && task instanceof FlowableTask<?> && this.canChildrenProgress(executor.getExecution(), taskRun)) {
                 RunContext runContext = runContextFactory.of(executor.getFlow(), task, executor.getExecution(), taskRun);
                 nextTaskRuns.addAll(this.childNextsTaskRun(executor, taskRun, runContext));
-                this.childWorkerTaskResult(executor.getFlow(), executor.getExecution(), taskRun, runContext).ifPresent(list::add);
+                Optional<WorkerTaskResult> flowableResult = this.childWorkerTaskResult(executor.getFlow(), executor.getExecution(), taskRun, runContext);
+                if (flowableResult.isPresent()) {
+                    list.add(flowableResult.get());
+                    // fail-fast: a flowable that just resolved to FAILED asks to interrupt its still-running children
+                    if (flowableResult.get().getTaskRun().getState().getCurrent() == State.Type.FAILED && task instanceof OnChildFailureInterface onChildFailure) {
+                        this.interruptOnChildFailure(executor, onChildFailure, taskRun, runContext);
+                    }
+                }
             }
 
             // For KILLING flowable tasks: only compute worker task result (kill-path) — no new child tasks
@@ -790,12 +855,19 @@ public class ExecutorService {
                     .collect(Collectors.toCollection(ArrayList::new));
             }
 
-            // If the task is a flowable and is terminated, check that all children are terminated.
+            // If the task is a flowable and is terminated, check that all children flowables are terminated.
             // This may not be the case for parallel flowable tasks like Parallel, Dag, ForEach...
             // After a failed task, some child flowable may not be correctly terminated.
+            // Restricted to flowable children on purpose (fixes #6780's original intent): a leaf task
+            // run that is still running is genuinely in progress (on a worker, or being interrupted by
+            // an onChildFailure fail-fast) and will report its own terminal state — forcing it here
+            // would race ahead of that and silently discard the real outcome (e.g. a fail-fast
+            // CANCELLED being overwritten by the parent's FAILED before the worker even answers).
             if (task instanceof FlowableTask<?> && taskRun.getState().isTerminated()) {
+                FlowWithSource flow = executor.getFlow();
                 List<TaskRun> updated = executor.getExecution().findChildren(taskRun).stream()
                     .filter(child -> !child.getState().isTerminated())
+                    .filter(child -> flow.findTaskByTaskIdOrNull(child.getTaskId()) instanceof FlowableTask<?>)
                     .map(throwFunction(child -> child.withState(taskRun.getState().getCurrent())))
                     .toList();
                 if (!updated.isEmpty()) {
